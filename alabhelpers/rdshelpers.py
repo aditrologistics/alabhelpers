@@ -1,9 +1,13 @@
 import os
 import boto3
 from typing import List
-import loghelpers
+import datetime
+try:
+    from .loghelpers import setup_logger
+except ImportError:
+    from loghelpers import setup_logger
 
-logger = loghelpers.setup_logger('rdshelpers')
+logger = setup_logger('rdshelpers')
 
 
 def _verify_params(secret_arn, cluster_arn, database, rds):
@@ -168,23 +172,27 @@ def make_param(fieldname: str, value, fieldtype: str) -> dict:
         return "longValue"
 
     def map_string(value, t):
+        isnull = value is None
         if t == "date":
             if not value:
-                return value
-            return value[:10]
+                return value, isnull
+            if type(value) == datetime.datetime:
+                return value.strftime("%Y-%m-%d"), isnull
+            return value[:10], isnull
         if t == "int" and value == '':
-            return None
+            return 0, isnull
         # if t == "string" and value is None:
         #     return ''
-        return value
+        return value, isnull
 
+    mappedValue, isNull = map_string(value, fieldtype)
     parameter = {
         "name": fieldname,
-        "value": { maptype(fieldtype): map_string(value, fieldtype) }
+        "value": { maptype(fieldtype): mappedValue }
     }
     if fieldtype == "date":
         parameter["typeHint"] = 'DATE'
-    if value is None:
+    if value is None or isNull:
         parameter["value"] = { "isNull": True}
 
     return parameter
