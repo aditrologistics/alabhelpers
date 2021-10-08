@@ -11,14 +11,10 @@ logger = setup_logger('rdshelpers')
 
 
 def _verify_params(secret_arn, cluster_arn, database, rds):
-    if secret_arn is None:
-        secret_arn = os.environ.get("AURORA_SECRET_ARN")
-    if cluster_arn is None:
-        cluster_arn = os.environ.get("AURORA_CLUSTER_ARN")
-    if database is None:
-        database = os.environ.get("DATABASE")
-    if rds is None:
-        rds = boto3.client('rds-data')
+    secret_arn = secret_arn or os.environ.get("AURORA_SECRET_ARN")
+    cluster_arn = cluster_arn or os.environ.get("AURORA_CLUSTER_ARN")
+    database = database or os.environ.get("DATABASE")
+    rds = rds or boto3.client('rds-data')
 
     if secret_arn is None:
         raise ValueError("'secret_arn' not set and not defined in AURORA_SECRET_ARN.")
@@ -28,6 +24,7 @@ def _verify_params(secret_arn, cluster_arn, database, rds):
         raise ValueError("'database' not set and not defined in DATABASE.")
 
     return secret_arn, cluster_arn, database, rds
+
 
 def execute_sql(
         sql: str, 
@@ -169,6 +166,8 @@ def make_param(fieldname: str, value, fieldtype: str) -> dict:
     def maptype(t: str) -> str:
         if t in ["string", "date"]:
             return "stringValue"
+        if t in ["bool"]:
+            return "booleanValue"
         return "longValue"
 
     def map_string(value, t):
@@ -181,6 +180,8 @@ def make_param(fieldname: str, value, fieldtype: str) -> dict:
             return value[:10], isnull
         if t == "int" and value == '':
             return 0, isnull
+        if t in ["bool"]:
+            return bool(value), isnull
         # if t == "string" and value is None:
         #     return ''
         return value, isnull
