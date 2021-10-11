@@ -110,9 +110,13 @@ def get_data(query_response: dict, columns: List[str]) -> list:
     Returns:
         list: List of rows, where each row is a map of (name -> value (str -> str))
     """
+    def extract_value(v):
+        if "isNull" in v:
+            return None
+        return list(v.values())[0]
     res = []
     for row in query_response.get("records", []):
-        res.append({columns[i]: list(v.values())[0] for i, v in enumerate(row)})
+        res.append({columns[i]: extract_value(v) for i, v in enumerate(row)})
     return res
 
 
