@@ -185,7 +185,7 @@ def make_param(fieldname: str, value, fieldtype: str) -> dict:
         if t in ["int"]:
             if value == '':
                 return 0, isnull
-            return int(value), isNull
+            return int(value), isnull
         if t in ["bool"]:
             return bool(value), isnull
         # if t == "string" and value is None:
