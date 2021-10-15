@@ -182,8 +182,10 @@ def make_param(fieldname: str, value, fieldtype: str) -> dict:
             if type(value) == datetime.datetime:
                 return value.strftime("%Y-%m-%d"), isnull
             return value[:10], isnull
-        if t == "int" and value == '':
-            return 0, isnull
+        if t in ["int"]:
+            if value == '':
+                return 0, isnull
+            return int(value), isNull
         if t in ["bool"]:
             return bool(value), isnull
         # if t == "string" and value is None:

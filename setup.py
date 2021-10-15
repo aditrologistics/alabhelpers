@@ -12,7 +12,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 #     deps = [l.strip() for l in f.readlines() if l.strip() != "" and not l.strip().startswith("#")]
 
 setup(name='alabhelpers',
-    version='1.0.3',
+    version='1.0.4',
     description='Useful python helpers for lambda',
     url='https://github.com/aditrologistics/alabhelpers.git',
     author='Jesper Högström',
