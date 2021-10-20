@@ -22,7 +22,7 @@ def response(content, *, status: int = 200) -> dict:
     result = {
         'statusCode': status,
         "headers": {'Content-Type': 'application/json', **DEFAULT_HEADERS},
-        'body': json.dumps(content, default=DecimalEncoder)
+        'body': json.dumps(content, default=str, cls=DecimalEncoder)
     }
     return result
 
