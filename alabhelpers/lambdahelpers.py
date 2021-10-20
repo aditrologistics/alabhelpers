@@ -1,5 +1,6 @@
 import json
 import urllib
+from decimal import Decimal
 
 DEFAULT_HEADERS = {
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -7,12 +8,21 @@ DEFAULT_HEADERS = {
     'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
 }
 
+class DecimalEncoder(json.JSONEncoder):
+  def default(self, obj):
+    if isinstance(obj, Decimal):
+        s = str(obj)
+        if "." in s:
+            return float(obj)
+        return int(obj)
+    return json.JSONEncoder.default(self, obj)
+
 
 def response(content, *, status: int = 200) -> dict:
     result = {
         'statusCode': status,
         "headers": {'Content-Type': 'application/json', **DEFAULT_HEADERS},
-        'body': json.dumps(content, default=str)
+        'body': json.dumps(content, default=DecimalEncoder)
     }
     return result
 
