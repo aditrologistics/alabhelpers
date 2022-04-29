@@ -27,10 +27,10 @@ def _verify_params(secret_arn, cluster_arn, database, rds):
 
 
 def execute_sql(
-        sql: str, 
+        sql: str,
         *,
         params: list = None,
-        rds = None,
+        rds=None,
         cluster_arn: str = None,
         secret_arn: str = None,
         database: str = None) -> dict:
@@ -41,8 +41,10 @@ def execute_sql(
         sql (str): sql-statement to execute
         rds ([type]): boto3-client for rds-data. If not set, a new client is created on each invocation.
         params (list, optional): Parameters for the sql-statement. Defaults to None.
-        cluster_arn (str, optional): ARN to the cluster. If not set, use the value of the environment variable AURORA_CLUSTER_ARN.
-        secret_arn (str, optional): ARN to the cluster. If not set, use the value of the environment variable AURORA_SECRET_ARN.
+        cluster_arn (str, optional): ARN to the cluster.
+            If not set, use the value of the environment variable AURORA_CLUSTER_ARN.
+        secret_arn (str, optional): ARN to the cluster.
+            If not set, use the value of the environment variable AURORA_SECRET_ARN.
         database (str, optional): Name of database. If not set, use the value of the environment variable DATABASE.
 
     Returns:
@@ -65,7 +67,7 @@ def execute_sql_batch(
         sql: str,
         *,
         params: list = None,
-        rds = None,
+        rds=None,
         cluster_arn: str = None,
         secret_arn: str = None,
         database: str = None) -> dict:
@@ -76,8 +78,10 @@ def execute_sql_batch(
         sql (str): sql-statement to execute
         rds ([type]): boto3-client for rds-data. If not set, a new client is created on each invocation.
         params (list, optional): Parameters for the sql-statement. Defaults to None.
-        cluster_arn (str, optional): ARN to the cluster. If not set, use the value of the environment variable AURORA_CLUSTER_ARN.
-        secret_arn (str, optional): ARN to the cluster. If not set, use the value of the environment variable AURORA_SECRET_ARN.
+        cluster_arn (str, optional): ARN to the cluster.
+            If not set, use the value of the environment variable AURORA_CLUSTER_ARN.
+        secret_arn (str, optional): ARN to the cluster.
+            If not set, use the value of the environment variable AURORA_SECRET_ARN.
         database (str, optional): Name of database. If not set, use the value of the environment variable DATABASE.
 
     Returns:
@@ -124,7 +128,7 @@ def fetch_from_sql(
         sql: str,
         fields: List[str],
         params: list = None,
-        rds = None,
+        rds=None,
         cluster_arn: str = None,
         secret_arn: str = None,
         database: str = None) -> list:
@@ -195,11 +199,11 @@ def make_param(fieldname: str, value, fieldtype: str) -> dict:
     mappedValue, isNull = map_string(value, fieldtype)
     parameter = {
         "name": fieldname,
-        "value": { maptype(fieldtype): mappedValue }
+        "value": {maptype(fieldtype): mappedValue}
     }
     if fieldtype == "date":
         parameter["typeHint"] = 'DATE'
     if value is None or isNull:
-        parameter["value"] = { "isNull": True}
+        parameter["value"] = {"isNull": True}
 
     return parameter

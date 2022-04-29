@@ -8,14 +8,16 @@ DEFAULT_HEADERS = {
     'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
 }
 
+
 class DecimalEncoder(json.JSONEncoder):
-  def default(self, obj):
-    if isinstance(obj, Decimal):
-        s = str(obj)
-        if "." in s:
-            return float(obj)
-        return int(obj)
-    return json.JSONEncoder.default(self, obj)
+
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            s = str(obj)
+            if "." in s:
+                return float(obj)
+            return int(obj)
+        return json.JSONEncoder.default(self, obj)
 
 
 def response(content, *, status: int = 200) -> dict:
@@ -25,6 +27,7 @@ def response(content, *, status: int = 200) -> dict:
         'body': json.dumps(content, cls=DecimalEncoder)
     }
     return result
+
 
 def route_and_execute(event, routes) -> dict:
     """
