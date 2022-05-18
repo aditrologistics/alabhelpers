@@ -27,5 +27,7 @@ def setup_logger(
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.propagate = False  # Prevent duplicate loglines in cloud watch
-    logger.info(f"Configuring a logger '{name}' for {level}")
+    if isinstance(level, int):
+        level = logging.getLevelName(level)
+    logger.info(f"Configured logger '{name}' with level {level}.")
     return logger
