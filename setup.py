@@ -13,17 +13,16 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='alabhelpers',
-    version='1.0.10',
+    version='1.0.11',
     description='Useful python helpers for lambda',
     url='https://github.com/aditrologistics/alabhelpers.git',
     author='Jesper Högström',
     author_email='jesper.hogstrom@aditrologistics.com',
-    # license='MIT',
+    license='MIT',
     packages=find_packages(),
     # zip_safe=False
     long_description_content_type="text/markdown",
     long_description=long_description,
     install_requires=["boto3"],
-    # package_data={'': ['preinstalled*.txt']},
     include_package_data=True,
 )

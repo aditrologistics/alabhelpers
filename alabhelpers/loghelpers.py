@@ -11,6 +11,19 @@ def setup_logger(
         name: str = None,
         level: int = None,
         formatstr: str = None) -> logging.Logger:
+    """
+    Sets up a logger with some sensible defaults, and returns it.
+
+    Args:
+        name (str, optional): Name of logger. Defaults to None.
+        level (int, optional): loglevel. Defaults to None.
+            If None, loglevel is read from the environment variable LOGLEVEL.
+            If no LOGLEVEL environment variable is found, the default loglevel (_DEFAULT_LOGLEVEL) is used.
+        formatstr (str, optional): The logger's format string. Defaults to None.
+
+    Returns:
+        logging.Logger: Logger than can be used for logging.
+    """
     logger = logging.getLogger(name)
     if level is None:
         level = logging.getLevelName(os.environ.get("LOGLEVEL", _DEFAULT_LOGLEVEL))
