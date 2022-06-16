@@ -6,6 +6,12 @@ import os
 _DEFAULT_LOGLEVEL = "INFO"
 
 
+_default_formatstr = '%(asctime)s | %(levelname)-8s | %(message)s'
+# No need to include time in cloudwatch logs
+if os.environ.get("LAMBDA_TASK_ROOT"):
+    _default_formatstr = '%(levelname)-8s | %(message)s'
+
+
 def setup_logger(
         *,
         name: str = None,
@@ -31,7 +37,7 @@ def setup_logger(
         logger.info(f"Handler {name} already initialized")
         return logger
 
-    formatstr = formatstr or '%(asctime)s | %(levelname)-8s | %(message)s'
+    formatstr = formatstr or _default_formatstr
     logger.setLevel(level)
     handler = logging.StreamHandler(sys.stderr)
     handler.name = name

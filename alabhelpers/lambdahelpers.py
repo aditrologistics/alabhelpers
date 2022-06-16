@@ -29,6 +29,36 @@ def response(content, *, status: int = 200) -> dict:
     return result
 
 
+def generate_response(*, status_code: int = 200, body=None, headers: dict = None):
+    """
+    Generates a response structure that can be returned from a lambda function.
+
+    Args:
+        status_code (int, optional): Status code to return. Defaults to 200.
+        body (_type_, optional): If dict or list converted with json.dumps(). Otherwise passed as is. Defaults to None.
+        headers (dict, optional): Headers to add to response. Defaults to None.
+
+    Returns:
+        _type_: dictionary suitable for returning from a lambda function.
+    """
+    headers = headers or {}
+
+    result = {
+        "statusCode": status_code,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            **headers
+        },
+    }
+    if body is None:
+        return result
+    if isinstance(body, dict) or isinstance(body, list):
+        body = json.dumps(body, cls=DecimalEncoder)
+    result["body"] = body
+    return result
+
+
 def route_and_execute(event, routes) -> dict:
     """
     Matches the incoming event to a route and executes the route.

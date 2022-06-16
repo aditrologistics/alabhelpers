@@ -13,7 +13,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='alabhelpers',
-    version='1.0.11',
+    version='1.0.12',
     description='Useful python helpers for lambda',
     url='https://github.com/aditrologistics/alabhelpers.git',
     author='Jesper Högström',
