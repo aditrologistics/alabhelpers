@@ -1,10 +1,9 @@
 import logging
 import sys
 import os
-
+import time
 
 _DEFAULT_LOGLEVEL = "INFO"
-
 
 _default_formatstr = '%(asctime)s | %(levelname)-8s | %(message)s'
 # No need to include time in cloudwatch logs
@@ -50,3 +49,21 @@ def setup_logger(
         level = logging.getLevelName(level)
     logger.info(f"Configured logger '{name}' with level {level}.")
     return logger
+
+
+def timeit(logger):
+    def timeit_decorator(method):
+        def timeit_wrapper(*args, **kw):
+            ts = time.time()
+            result = method(*args, **kw)
+            te = time.time()
+            if 'log_time' in kw:
+                name = kw.get('log_name', method.__name__.upper())
+                kw['log_time'][name] = int((te - ts) * 1000)
+            else:
+                logger.debug('%r  %2.2f ms' % \
+                             (method.__name__, (te - ts) * 1000))
+            return result
+
+        return timeit_wrapper
+    return timeit_decorator
